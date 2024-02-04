@@ -1,0 +1,65 @@
+<%- include('partials/header') %>
+<main>
+	<h2>Admin Panel</h2>
+	<section>
+		<h3>Users</h3>
+		<ul>
+			<% for (const user of users) { %>
+				<li><a href="/profile/<%= user.id %>">[<%= user.role %>] <%= user.username %></a></li>
+			<% } %>
+		</ul>
+	</section>
+	<section>
+		<h3>Database Management</h3>
+		<form action="/admin/database" method="post" id="db-form">
+			<select name="action">
+				<option value="query">Query</option>
+				<option value="exec">Execute</option>
+			</select>
+			<div>
+				<textarea name="sql" rows="5" cols="50"></textarea>
+			</div>
+			<input type="submit" value="Execute SQL" />
+		</form>
+	</section>
+	<section>
+		<h3>Backup</h3>
+		<form action="/admin/backup" method="post">
+			<input type="hidden" name="name" value="<%= 'backup_' + Math.random().toString(36).slice(2) %>">
+			<ul>
+				<li>
+					<label>
+						<input type="checkbox" name="backup[boards]" value="boards" />
+						Boards
+					</label>
+				</li>
+				<li>
+					<label>
+						<input type="checkbox" name="backup[categories]" value="categories" />
+						Categories
+					</label>
+				</li>
+				<li>
+					<label>
+						<input type="checkbox" name="backup[threads]" value="threads" />
+						Threads
+					</label>
+				</li>
+				<li>
+					<label>
+						<input type="checkbox" name="backup[posts]" value="posts" />
+						Posts
+					</label>
+				</li>
+				<li>
+					<label>
+						<input type="checkbox" name="backup[users]" value="users" />
+						Users
+					</label>
+				</li>
+			</ul>
+			<input type="submit" value="Backup" />
+		</form>
+	</section>
+</main>
+<%- include('partials/footer') %>

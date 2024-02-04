@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+    web:
+        build: .
+        image: hahamut
+        networks:
+            web:
+                ipv4_address: 172.20.0.2
+        environment:
+            - PORT=8763
+            - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+            - DB_PATH=/db.sqlite
+        ports:
+            - 8763:8763
+        volumes:
+            - ./flag:/flag:ro
+            - ./db.sqlite:/db.sqlite
+        restart: always
+networks:
+    web:
+        ipam:
+            config:
+                - subnet: 172.20.0.0/24

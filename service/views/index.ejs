@@ -1,0 +1,24 @@
+<%- include('partials/header') %>
+<main>
+	<section>
+		<h2><%= _('board.discussion_board') %></h2>
+		<ul>
+			<% for (const board of boards) { %>
+			<li>
+				<a href="/board/<%= board.id %>"><%= board.name %></a>
+				<% if (isAdmin) { %>
+					<a is="extended-anchor" href="/board/<%= board.id %>" method="delete"><%= _('common.delete') %></a>
+				<% } %>
+			</li>
+			<% } %>
+		</ul>
+		<% if (isAdmin) { %>
+			<form action="/board" method="POST">
+				<label for="name"><%= _('board.discussion_board_name') %></label>
+				<input type="text" name="name" id="name" />
+				<button type="submit"><%= _('common.add') %></button>
+			</form>
+		<% } %>
+	</section>
+</main>
+<%- include('partials/footer') %>

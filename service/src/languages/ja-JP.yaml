@@ -1,0 +1,37 @@
+site:
+    name: ハハムト
+    description: 最も面白いフォーラムソフトウェア!
+common:
+    home: ホーム
+    login: ログイン
+    logout: ログアウト
+    register: 登録
+    admin: 管理者
+    profile: プロフィール
+    add: 追加
+    delete: 削除
+    all: 全て
+    view_as_regular_user: 一般ユーザーとして表示
+    please_select_language: 言語を選択してください
+    default: デフォルト
+    use_browser_language: ブラウザの言語を使用
+board:
+    category: カテゴリ
+    title: タイトル
+    author: 著者
+    created_at: 作成日
+    category_name: カテゴリ名
+    new_thread: ⊕ 新しいスレッド
+    discussion_board: ディスカッションボード
+    discussion_board_name: ディスカッションボード名
+users:
+    username: ユーザー名
+    password: パスワード
+thread:
+    content: 内容
+    content_placeholder: 内容を入力してください。Markdown も使用できます。
+    reply: 返信
+    new_thread_to: '%s に新しいスレッドを投稿'
+    title: タイトル
+    preview: プレビュー
+    submit: 提出

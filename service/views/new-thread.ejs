@@ -1,0 +1,28 @@
+<%- include('partials/header') %>
+<main>
+	<h2><%- _('thread.new_thread_to', `<a href="/board/${board.id}">${board.name}</a>`) %></h2>
+	<form method="POST">
+		<p>
+			<label for="post_title"><%= _('thread.title') %></label>
+			<input type="text" name="post_title" placeholder="<%= _('thread.title') %>" id="post_title" <% if (typeof post_title !== 'undefined') { %>value=<%= post_title %><% } %>/>
+		</p>
+		<p>
+			<label for="content"><%= _('thread.content') %></label>
+			<textarea name="content" placeholder="<%= _('thread.content_placeholder') %>" id="content" rows="10"><% if (typeof content !== 'undefined') { %><%= content %><% } %></textarea>
+			<% if (typeof content !== 'undefined') { %>
+				<md-text style="display: block; border: 1px solid var(--border); border-radius: var(--standard-border-radius); padding: .5rem;"><%= content %></md-text>
+			<% } %>
+		</p>
+		<p>
+			<label for="category"><%= _('board.category') %></label>
+			<select name="category" id="category">
+				<% for(const cat of categories) { %>
+				<option value="<%= cat.id %>" <% if (typeof category !== 'undefined' && cat.id == category) { %>selected<% } %>><%= cat.name %></option>
+				<% } %>
+			</select>
+		</p>
+		<button type="submit" formaction="?preview=true"><%= _('thread.preview') %></button>
+		<button type="submit" formaction="?"><%= _('thread.submit') %></button>
+	</form>
+</main>
+<%- include('partials/footer') %>

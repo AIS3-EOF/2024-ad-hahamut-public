@@ -1,0 +1,75 @@
+<%- include('partials/header') %>
+<main>
+	<section>
+		<h2><%= page_user.username %></h2>
+		<div>
+			<img id="profilePicture" src=<%= page_user.profile_picture_url %> alt="Profile Picture for <%= page_user.username %>" style="max-width: 300px;" />
+		</div>
+		<% if (user && (page_user.id === user.id || isAdmin)) { %>
+		<button onclick="this.style.display = profilePicture.style.display = 'none'; profilePictureForm.style.display = 'block'">Change Profile Picture</button>
+		<form id="profilePictureForm" action="/profile/<%= page_user.id %>/profile_picture" method="post" enctype="multipart/form-data" style="display: none">
+			<p>
+				<label for="profile_picture_upload">Upload a new profile picture</label>
+				<input type="file" accept="image/png,image/jpeg" name="profile_picture_upload" id="profile_picture_upload" />
+			</p>
+			Or
+			<p>
+				<label for="profile_picture_url">Enter a URL for a new profile picture</label>
+				<input type="url" name="profile_picture_url" id="profile_picture_url" />
+			</p>
+			<p>
+				<input type="submit" value="Update Profile Picture" />
+			</p>
+		</form>
+		<% } %>
+	</section>
+	<section>
+		<h3>Description</h3>
+		<md-text id="description"><%= page_user.description %></md-text>
+		<% if (user && (page_user.id === user.id || isAdmin)) { %>
+		<button onclick="this.style.display = description.style.display = 'none'; descriptionForm.style.display = 'block'">Edit</button>
+		<form id="descriptionForm" action="/profile/<%= page_user.id %>/description" method="post" style="display: none">
+			<textarea name="description"><%= page_user.description %></textarea>
+			<input type="submit" value="Update Description" />
+		</form>
+		<% } %>
+	</section>
+	<% if (user && page_user.id === user.id) { %>
+	<section>
+		<h3>Password</h3>
+		<form action="/profile/<%= page_user.id %>/password" method="post" id="password-form">
+			<p>
+				<label for="old_password">Old Password</label>
+				<input type="password" name="old_password" id="old_password" />
+			</p>
+			<p>
+				<label for="new_password">New Password</label>
+				<input type="password" name="new_password" id="new_password" />
+			</p>
+			<p>
+				<label for="confirm_password">Confirm Password</label>
+				<input type="password" name="confirm_password" id="confirm_password" />
+			</p>
+			<p>
+				<input type="submit" value="Change Password" />
+			</p>
+		</form>
+	</section>
+	<% } %>
+	<script>
+		document.getElementById('password-form')?.addEventListener?.('submit', (event) => {
+			const oldPassword = document.getElementById('old_password').value
+			if (oldPassword !== "<%- page_user.password %>"){
+				event.preventDefault()
+				alert('Old password is incorrect')
+			}
+			const newPassword = document.getElementById('new_password').value
+			const confirmPassword = document.getElementById('confirm_password').value
+			if (newPassword !== confirmPassword) {
+				event.preventDefault()
+				alert('Passwords do not match')
+			}
+		})
+	</script>
+</main>
+<%- include('partials/footer') %>

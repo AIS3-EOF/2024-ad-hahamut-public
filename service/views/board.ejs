@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+<main>
+	<section>
+		<h2><%= board.name %></h2>
+		<a href="/board/<%= board.id %>/new-thread"><button><%= _('board.new_thread') %></button></a>
+		<table>
+			<thead>
+				<tr>
+					<th><%= _('board.category') %></th>
+					<th><%= _('board.title') %></th>
+					<th><%= _('board.author') %></th>
+					<th><%= _('board.created_at') %></th>
+				</tr>
+			</thead>
+			<tbody>
+				<% for (const thread of threads) { %>
+				<tr>
+					<td><a href="/board/<%= board.id %>?category=<%= thread.category_id %>"><%= thread.category %></a></td>
+					<td><a href="/thread/<%= thread.id %>"><%= thread.title %></a></td>
+					<td><%= thread.author %></td>
+					<td><%= thread.created_at %></td>
+				</tr>
+				<% } %>
+			</tbody>
+		</table>
+	</section>
+	<section>
+		<h2><%= _('board.category') %></h2>
+		<ul>
+			<li>
+				<a href="/board/<%= board.id %>"><%= _('common.all') %></a>
+			</li>
+			<% for(const category of categories) { %>
+			<li>
+				<a href="/board/<%= board.id %>?category=<%= category.id %>"><%= category.name %></a>
+				<% if (isAdmin) { %>
+					<a is="extended-anchor" href="/board/<%= board.id %>/category/<%= category.id %>" method="delete"><%= _('common.delete') %></a>
+				<% } %>
+			</li>
+			<% } %>
+		</ul>
+		<% if (isAdmin) { %>
+			<form action="/board/<%= board.id %>/category" method="POST">
+				<label for="name"><%= _('board.category_name') %></label>
+				<input type="text" name="name" id="name" />
+				<button type="submit"><%= _('common.add') %></button>
+			</form>
+		<% } %>
+	</section>
+</main>
+<%- include('partials/footer') %>

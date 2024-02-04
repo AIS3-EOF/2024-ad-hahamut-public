@@ -1,0 +1,38 @@
+site:
+    name: Hahamut
+    description: The funniest forum software.
+common:
+    home: Home
+    login: Login
+    logout: Logout
+    register: Register
+    admin: Admin
+    profile: Profile
+    error: Error
+    add: Add
+    delete: Delete
+    all: All
+    view_as_regular_user: View as Regular User
+    please_select_language: Please Select Language
+    default: Default
+    use_browser_language: Use Browser Language
+board:
+    category: Category
+    title: Title
+    author: Author
+    created_at: Created At
+    category_name: Category Name
+    new_thread: ⊕ New Thread
+    discussion_board: Discussion Board
+    discussion_board_name: Discussion Board Name
+users:
+    username: Username
+    password: Password
+thread:
+    content: Content
+    content_placeholder: Write something, Markdown is supported.
+    reply: Reply
+    new_thread_to: Post new Thread to %s
+    title: Title
+    preview: Preview
+    submit: Submit

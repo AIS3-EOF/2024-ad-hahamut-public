@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="/simple.css" rel="stylesheet" />
+		<script type="module" src="/md-text.js" defer></script>
+		<script type="module" src="/x-a.js" defer></script>
+		<title><%= title %></title>
+	</head>
+	<body>
+		<header>
+			<nav>
+				<a href="/"><%= _('common.home') %></a>
+				<% if (!user) { %>
+				<a href="/register"><%= _('common.register') %></a>
+				<a href="/login"><%= _('common.login') %></a>
+				<% } else { %>
+				<a href="/profile/<%= user.id %>"><%= _('common.profile') %></a>
+				<a onclick="logout.submit()"><%= _('common.logout') %></a>
+				<form id="logout" style="display: hidden" action="/update" method="post">
+					<input type="hidden" name="user" value="null" />
+				</form>
+					<% if (user.role === 'admin') { %>
+					<a href="/admin"><%= _('common.admin') %></a>
+					<a onclick="set_regular_user.submit()"><%= _('common.view_as_regular_user') %></a>
+					<form id="set_regular_user" style="display: hidden" action="/update" method="post">
+						<input type="hidden" name="user[role]" value="user" />
+					</form>
+					<% } %>
+				<% } %>
+				<select onchange="language.lang.value=this.value; language.submit()">
+					<option value="" disabled selected><%= _('common.please_select_language') %></option>
+					<option value="null"><%= _('common.use_browser_language') %></option>
+					<% for (const lang of languages) { %>
+					<option value="<%= lang %>"><%= lang %></option>
+					<% } %>
+				</select>
+				<form id="language" style="display: hidden" action="/update" method="post">
+					<input type="hidden" name="lang" value="" />
+				</form>
+			</nav>
+			<h1><%= _('site.name') %></h1>
+			<p><%= _('site.description') %></p>
+		</header>

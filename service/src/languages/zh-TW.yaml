@@ -1,0 +1,37 @@
+site:
+    name: 哈哈姆特
+    description: 最有趣的論壇網站!
+common:
+    home: 首頁
+    login: 登入
+    logout: 登出
+    register: 註冊
+    admin: 管理
+    profile: 個人檔案
+    add: 新增
+    delete: 刪除
+    all: 全部
+    view_as_regular_user: 以一般使用者身份瀏覽
+    please_select_language: 請選擇語言
+    default: 預設
+    use_browser_language: 使用瀏覽器語言
+board:
+    category: 分類
+    title: 標題
+    author: 作者
+    created_at: 發表時間
+    category_name: 分類名稱
+    new_thread: ⊕ 發表文章
+    discussion_board: 討論版
+    discussion_board_name: 討論版名稱
+users:
+    username: 使用者名稱
+    password: 密碼
+thread:
+    content: 內容
+    content_placeholder: 請輸入內容，支援 Markdown。
+    reply: 回覆
+    new_thread_to: 發表新文章於 %s
+    title: 標題
+    preview: 預覽
+    submit: 發表

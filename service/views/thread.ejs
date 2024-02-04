@@ -1,0 +1,27 @@
+<%- include('partials/header') %>
+<main>
+	<h2><%= thread.title %></h2>
+	<p>
+		<a href="/board/<%= thread.board_id %>"><%= thread.board %></a> &rangle; <a href="/board/<%= thread.board_id %>?category=<%= thread.category_id %>"><%= thread.category %></a>
+		<br>
+		<time><%= thread.created_at %></time>
+	</p>
+	<% for (const post of posts) { %>
+		<article>
+			<md-text><%= post.content %></md-text>
+			<p>by <a href="/profile/<%= post.author_id %>"><%= post.author %></a> at <time><%= post.created_at %></time></p>
+		</article>
+	<% } %>
+	<% if (user) { %>
+	<form action="/thread/<%= thread.id %>/reply" method="POST">
+		<p>
+			<label for="content"><%= _('thread.content') %></label>
+			<textarea name="content" placeholder="<%= _('thread.content_placeholder') %>" id="content" rows="10"></textarea>
+		</p>
+		<input type="submit" value="<%= _('thread.reply') %>" />
+	</form>
+	<% } else { %>
+	<p>Please <a href="/login?next=<%= encodeURIComponent('/thread/' + thread.id) %>">login</a> before replying.</p>
+	<% } %>
+</main>
+<%- include('partials/footer') %>

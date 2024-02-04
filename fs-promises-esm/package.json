@@ -1,0 +1,9 @@
+{
+	"name": "fs-promises-esm",
+	"version": "0.0.3",
+	"main": "index.js",
+	"types": "index.d.ts",
+	"type": "module",
+	"description": "If you see this, do not ever install this package. It is completely unsafe and useless.",
+	"license": "MIT"
+}

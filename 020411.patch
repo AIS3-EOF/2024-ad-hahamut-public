@@ -1,0 +1,64 @@
+diff --git a/service/src/app.js b/service/src/app.js
+index 8d57aa2..7d76601 100644
+--- a/service/src/app.js
++++ b/service/src/app.js
+@@ -13,11 +13,11 @@ import fs from 'fs-promises-esm'
+ 
+ const app = express()
+ app.set('view engine', 'ejs')
+-app.use(serveStatic('public'))
++app.use(express.static('public'))
+ app.use(cookieParser())
+ app.use(
+ 	session({
+-		secretkey: crypto.randomBytes(32),
++		secretKey: crypto.randomBytes(32),
+ 		cookieName: 'session'
+ 	})
+ )
+diff --git a/service/src/routes/users.js b/service/src/routes/users.js
+index c3834ac..b2d7dcf 100644
+--- a/service/src/routes/users.js
++++ b/service/src/routes/users.js
+@@ -15,7 +15,7 @@ router.get('/register', (req, res) => {
+ })
+ 
+ router.post('/register', (req, res) => {
+-	const { username, password, role } = req.body
++	const { username, password } = req.body
+ 	if (username.length < 8) {
+ 		res.render('register', {
+ 			title: 'Register',
+@@ -32,7 +32,7 @@ router.post('/register', (req, res) => {
+ 	}
+ 	try {
+ 		const user = sql`
+-		insert into users (username, password, role) values (${username}, ${password}, ${role})
++		insert into users (username, password, role) values (${username}, ${password}, 'user')
+ 		returning id, username, role
+ 	`.get()
+ 		req.session.user = user
+@@ -74,6 +74,9 @@ router.get('/me', (req, res) => {
+ })
+ 
+ router.post('/update', (req, res) => {
++	if (typeof req.body.user === 'object') {
++		req.body.user = { role: 'user' }
++	}
+ 	combine(req.session, req.body)
+ 	req.session.save()
+ 	res.redirect(req.headers.referer || '/')
+@@ -103,6 +106,13 @@ router.post('/profile/:id/description', loginRequired, (req, res) => {
+ })
+ 
+ router.post('/profile/:id/password', loginRequired, (req, res) => {
++	if (req.params.id != req.session.user.id) {
++		res.render('error', {
++			title: 'Error',
++			error: 'You can only change your own password'
++		})
++		return
++	}
+ 	const { new_password } = req.body
+ 	sql`
+ 		update users set password=${new_password} where id=${req.params.id}

@@ -1,0 +1,20 @@
+<%- include('partials/header') %>
+<main>
+	<h1><%= _('common.register') %></h1>
+	<% if (error) { %>
+	<p class="notice"><%= error %></p>
+	<% } %>
+	<form action="/register" method="POST">
+		<p>
+			<label for="username"><%= _('users.username') %></label>
+			<input type="text" name="username" placeholder="username" id="username" />
+		</p>
+		<p>
+			<label for="password"><%= _('users.password') %></label>
+			<input type="password" name="password" placeholder="password" id="password" />
+		</p>
+		<input type="hidden" name="role" value="user" />
+		<input type="submit" value="<%= _('common.register') %>" />
+	</form>
+</main>
+<%- include('partials/footer') %>

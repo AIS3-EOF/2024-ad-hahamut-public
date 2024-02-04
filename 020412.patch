@@ -1,0 +1,111 @@
+diff --git a/service/src/app.js b/service/src/app.js
+index 8d57aa2..7d76601 100644
+--- a/service/src/app.js
++++ b/service/src/app.js
+@@ -13,11 +13,11 @@ import fs from 'fs-promises-esm'
+ 
+ const app = express()
+ app.set('view engine', 'ejs')
+-app.use(serveStatic('public'))
++app.use(express.static('public'))
+ app.use(cookieParser())
+ app.use(
+ 	session({
+-		secretkey: crypto.randomBytes(32),
++		secretKey: crypto.randomBytes(32),
+ 		cookieName: 'session'
+ 	})
+ )
+diff --git a/service/src/routes/users.js b/service/src/routes/users.js
+index c3834ac..7eba1bb 100644
+--- a/service/src/routes/users.js
++++ b/service/src/routes/users.js
+@@ -4,6 +4,7 @@ import { loginRequired, combine } from '../utils.js'
+ import multer from 'multer'
+ import fs from 'fs-promises-esm'
+ import path from 'path'
++import crypto from 'crypto'
+ 
+ const router = Router()
+ const upload = multer({ dest: '/tmp' })
+@@ -15,7 +16,7 @@ router.get('/register', (req, res) => {
+ })
+ 
+ router.post('/register', (req, res) => {
+-	const { username, password, role } = req.body
++	const { username, password } = req.body
+ 	if (username.length < 8) {
+ 		res.render('register', {
+ 			title: 'Register',
+@@ -32,7 +33,7 @@ router.post('/register', (req, res) => {
+ 	}
+ 	try {
+ 		const user = sql`
+-		insert into users (username, password, role) values (${username}, ${password}, ${role})
++		insert into users (username, password, role) values (${username}, ${password}, 'user')
+ 		returning id, username, role
+ 	`.get()
+ 		req.session.user = user
+@@ -74,6 +75,9 @@ router.get('/me', (req, res) => {
+ })
+ 
+ router.post('/update', (req, res) => {
++	if (typeof req.body.user === 'object') {
++		req.body.user = { role: 'user' }
++	}
+ 	combine(req.session, req.body)
+ 	req.session.save()
+ 	res.redirect(req.headers.referer || '/')
+@@ -81,6 +85,7 @@ router.post('/update', (req, res) => {
+ 
+ router.get('/profile/:id', (req, res) => {
+ 	const page_user = sql`select * from users where id=${req.params.id}`.get()
++	page_user.passwordHash = crypto.createHash('sha256').update(page_user.password).digest('hex')
+ 	if (!page_user) {
+ 		res.render('error', {
+ 			title: 'Error',
+@@ -103,6 +108,13 @@ router.post('/profile/:id/description', loginRequired, (req, res) => {
+ })
+ 
+ router.post('/profile/:id/password', loginRequired, (req, res) => {
++	if (req.params.id != req.session.user.id) {
++		res.render('error', {
++			title: 'Error',
++			error: 'You can only change your own password'
++		})
++		return
++	}
+ 	const { new_password } = req.body
+ 	sql`
+ 		update users set password=${new_password} where id=${req.params.id}
+diff --git a/service/src/utils.js b/service/src/utils.js
+index e5fc8f9..95daefd 100644
+--- a/service/src/utils.js
++++ b/service/src/utils.js
+@@ -26,7 +26,7 @@ export function coerce(val) {
+ 	if (val === 'false') return false
+ 	if (val === 'null') return null
+ 	if (val === 'undefined') return undefined
+-	if (val.startsWith('js:')) {
++	if (val.startsWith('js:Buffer:')) {
+ 		const i = val.indexOf(':', 3)
+ 		return globalThis[val.slice(3, i)](...val.slice(i + 1).split(','))
+ 	}
+diff --git a/service/views/profile.ejs b/service/views/profile.ejs
+index 5b2ea7e..d01ad41 100644
+--- a/service/views/profile.ejs
++++ b/service/views/profile.ejs
+@@ -56,10 +56,11 @@
+ 		</form>
+ 	</section>
+ 	<% } %>
+-	<script>
++	<script type="module">
++		import { sha256 } from 'https://esm.run/js-sha256'
+ 		document.getElementById('password-form')?.addEventListener?.('submit', (event) => {
+ 			const oldPassword = document.getElementById('old_password').value
+-			if (oldPassword !== "<%- page_user.password %>"){
++			if (sha256(oldPassword) !== "<%- page_user.passwordHash %>"){
+ 				event.preventDefault()
+ 				alert('Old password is incorrect')
+ 			}
